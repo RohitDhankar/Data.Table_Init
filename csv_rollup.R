@@ -35,7 +35,7 @@ print(length(dt1_order$uniq_id))
 #print(tail(dt1_order,n=5))
 rm(dt_1)
 
-# > print(tail(dt_1,n=5))#
+# > print(tail(dt_1,n=5))
 # X cnt_nm    dates_a cty_nm store_code_t store_code_x  psale_a                     uniq_id
 # 1: 10652    RUS 2018-03-11  CTY_1     T 911512     X 815600 19266.33 RUS CTY_1 T 911512 X 815600
 # 2: 10653    RUS 2018-03-12  CTY_1     T 508751     X 702352 29323.65 RUS CTY_1 T 508751 X 702352
@@ -85,4 +85,60 @@ print(proc.time() - ptm_ij)
 # user  system elapsed 
 # 0.036   0.004   0.031 
 #
+
+rm(dt1_order,dt2_order)
+##### data.table::melt 
+
+str(total_df)
+# Drop the Index Columns - X.x and X.y 
+# Drop COMMON VALUE COLUMNS -- cnt_nm.y , cty_nm.y ,  store_code_t.y , store_code_x.y , 
+# within the "j-expression"
+
+total_dt[, c("X.x","X.y","cnt_nm.y" , "cty_nm.y" ,  "store_code_t.y" , "store_code_x.y" ):=NULL]  # Drop COLS with REFRENCE
+str(total_dt)
+#
+
+## Not reqd
+total_dt_melt_a = melt(total_dt, id.vars = c("cnt_nm.x","cty_nm.x","store_code_t.x","store_code_x.x","dates_a"), measure.vars = c("psale_a"))
+#
+head(total_dt_melt_a,n=5)
+tail(total_dt_melt_a,n=5)
+
+#
+total_dt_melt_a_unq = melt(total_dt, id.vars = c("uniq_id","dates_a"), measure.vars = c("psale_a"))
+#
+head(total_dt_melt_a_unq,n=5)
+tail(total_dt_melt_a_unq,n=5)
+#
+
+## Not reqd
+# total_dt_melt_b = melt(total_dt, id.vars = c("cnt_nm.x","cty_nm.x","store_code_t.x","store_code_x.x","dates_b"), measure.vars = c("psale_b"))
+# #
+# head(total_dt_melt_b,n=5)
+# tail(total_dt_melt_b,n=5)
+# #
+
+total_dt_melt_b_unq = melt(total_dt, id.vars = c("uniq_id","dates_b"), measure.vars = c("psale_b"))
+#
+head(total_dt_melt_b_unq,n=5)
+tail(total_dt_melt_b_unq,n=5)
+#
+rm(total_dt_melt_b,total_dt_melt_a,total_dt_melt,total_dt_melt1)
+
+
+#cube_a <- cube(total_dt_melt_a_unq, mean(psale_a), by=c("dates_a"))
+cube_a <- cube(total_dt_melt_a, sum(psale_a), by=c("uniq_id","dates_a"))
+head(cube_a,n=5)
+tail(cube_a,n=5)
+
+dates_aa <- total_dt_melt_a$dates_a
+#
+df_dates <- data.frame(Dates = dates_aa, Week_Num = strftime(dates_aa,'%W'))
+head(df_dates, 10)
+#
+
+#
+#### dcast == Long to Wide 
+#
+#dcast_total_dt_melt_b_unq = dcast(total_dt_melt_b_unq , uniq_id + dates_b ~ total_dt_melt_b_unq$psale_b , value.var = "value")
 
