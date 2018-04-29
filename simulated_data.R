@@ -54,12 +54,13 @@ str_code_2 = "X"
 require(data.table)
 #
 mkt_df <- data.table(cnt_nm = rep(c(ms_cntry1,ms_cntry2,ms_cntry3,ms_cntry4),4), 
-                     cty_nm = rep(c(ms_cty1,ms_cty2,ms_cty3,ms_cty4,ms_cty4,ms_cty3,ms_cty2,ms_cty1),2),
+                     dates_a,
+                     cty_nm = rep(c(ms_cty1,ms_cty2,ms_cty3,ms_cty4,ms_cty1,ms_cty2,ms_cty3,ms_cty4),2),
                      store_code_t = paste(str_code_1,str_code_a),   
                      store_code_x =  paste(str_code_2,str_code_b),     
                      psale_a
                      )
-mkt_df$user_id <- paste(mkt_df$cnt_nm,mkt_df$cty_nm,mkt_df$store_code_t,mkt_df$store_code_x,mkt_df$psale_a) 
+mkt_df$user_id <- paste(mkt_df$cnt_nm,mkt_df$cty_nm,mkt_df$store_code_t,mkt_df$store_code_x) 
 
 #
 head(mkt_df)
@@ -71,8 +72,44 @@ length(unique(mkt_df$user_id))
 #
 write.csv(mkt_df,file="test_data/mkt_df.csv")
 ## Writes to Sub Directory - DATA_Files
+
+##
+# Simulate another DF for joins etc 
+##
+## Count of COUNTRY ==IND == 2664 - obtained after creating DF - to be pre-calculated somehow ?
 #
+d4 <- as.Date("2010/11/29") ## End date ==  the START Date for the DF created above == 2010-11-29 
+d3 <- d4 - 2663            ## (len Country IND) - 1
+d3                         ## Start date
+#
+dates_b <- seq(d3,d4,by ="day")
+print(head(dates_b,n=20));print(tail(dates_b,n=20));
+#"Len"
+print(length(dates_b));
+#
+psale_b <- runif(aa/3,min=50000,max=90000) ## 50k-90k
+print(str(psale_b)) ; print(length(psale_b)) ; print(head(psale_b)); print(tail(psale_b))
+#
+mkt_df1 <- data.table(cnt_nm = rep(c(ms_cntry1,ms_cntry2,ms_cntry3,ms_cntry4),4), 
+                     dates_b, 
+                     cty_nm = rep(c(ms_cty1,ms_cty2,ms_cty3,ms_cty4,ms_cty1,ms_cty2,ms_cty3,ms_cty4),2),
+                     store_code_t = paste(str_code_1,str_code_a),   
+                     store_code_x = paste(str_code_2,str_code_b),     
+                     psale_b
+)
 
+## Dates and Product Sales - Not included as these two shall Vary.
+#
+mkt_df1$user_id <- paste(mkt_df1$cnt_nm,mkt_df1$cty_nm,mkt_df1$store_code_t,mkt_df1$store_code_x) 
 
-
-
+#
+head(mkt_df1)
+class(mkt_df1)
+str(mkt_df1)
+summary(mkt_df1)
+length(mkt_df1$user_id)
+length(unique(mkt_df1$user_id))
+#
+write.csv(mkt_df1,file="test_data/mkt_df1.csv")
+## Writes to Sub DIR - test_data
+#
