@@ -63,6 +63,26 @@ DT[Name %like% "ma$"]   # Pattern to MATCH - only END of STRING
 DT[Name %like% "ma"]    # Pattern to MATCH - anywhere in STRING
 #
 
-### Pg - 57 -- like - Convenience function for calling regexpr.
+### Source -- SO ---- 
+
+library(data.table)
+set.seed(1)
+DTa = data.table(
+  group=sample(letters[1:2],100,replace=TRUE), 
+  year=sample(2010:2012,100,replace=TRUE),
+  v=runif(100))
 #
+head(DTa,n=5)
+tail(DTa,n=5)
+#
+#install.packages("data.table", type = "source", repos = "http://Rdatatable.github.io/data.table")
+require(data.table)
+## CUBE == Calculate aggregates at various levels of groupings producing multiple (sub-)totals.
+## Reflects SQLs GROUPING SETS operations.
+
+cube_1 <- cube(DTa, mean(v), by=c("group","year"))
+cube_1
+#
+cube_2 <- cube(DTa, sum(v), by=c("year"))
+cube_2
 
