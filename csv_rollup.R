@@ -35,7 +35,7 @@ print(length(dt1_order$uniq_id))
 #print(tail(dt1_order,n=5))
 rm(dt_1)
 
-# > print(tail(dt_1,n=5))
+# > print(tail(dt_1,n=5))#
 # X cnt_nm    dates_a cty_nm store_code_t store_code_x  psale_a                     uniq_id
 # 1: 10652    RUS 2018-03-11  CTY_1     T 911512     X 815600 19266.33 RUS CTY_1 T 911512 X 815600
 # 2: 10653    RUS 2018-03-12  CTY_1     T 508751     X 702352 29323.65 RUS CTY_1 T 508751 X 702352
